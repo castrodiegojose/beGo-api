@@ -17,5 +17,3 @@ const pointsSchema = new Schema({
 });
 
 export default model<IPoint>('Point', pointsSchema)
-
-
