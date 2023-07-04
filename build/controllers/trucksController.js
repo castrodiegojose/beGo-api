@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllPoints = void 0;
-const pointsModel_1 = __importDefault(require("../models/pointsModel"));
-const getAllPoints = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const points = yield pointsModel_1.default.find();
-    if (!points)
-        return res.status(404).json("there are no points founded");
-    res.status(200).send({ status: "success", code: 200, data: points });
+exports.getAllTrucks = void 0;
+const trucksModel_1 = __importDefault(require("../models/trucksModel"));
+const getAllTrucks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const trucks = yield trucksModel_1.default.find();
+    if (!trucks)
+        return res.status(404).json("there are no trucks available");
+    res.status(200).send({ status: "success", code: 200, data: trucks });
 });
-exports.getAllPoints = getAllPoints;
-//# sourceMappingURL=pointsController.js.map
+exports.getAllTrucks = getAllTrucks;
+//# sourceMappingURL=trucksController.js.map
