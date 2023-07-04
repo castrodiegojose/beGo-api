@@ -14,8 +14,5 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
 
     const payload = jwt.verify(token, config.TOKEN_SECRET_KEY || 'tokenwhatever') as IPayload
     req.userId = payload._id;
-    console.log(payload)
-    
-
     next()
 }

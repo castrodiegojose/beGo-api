@@ -2,7 +2,9 @@ import express, {Application} from "express";
 import bodyparser from "body-parser";
 import connectDB from "./db/config";
 import config from "./config/default";
-import authRoutes from './routes/authRoutes'
+import { appRoutes } from "./routes";
+import { TokenValidation } from './middleware/verifyToken';
+
 
 // connecting mongoDB
 connectDB();
@@ -12,7 +14,8 @@ const app: Application = express();
 app.use(bodyparser.json());
 
 //routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', appRoutes.authRoutes);
+app.use('/api', TokenValidation, appRoutes.routes)
 
 // server
 const PORT = config.PORT || 3000;

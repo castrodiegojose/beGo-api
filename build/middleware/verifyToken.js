@@ -12,7 +12,6 @@ const TokenValidation = (req, res, next) => {
         return res.status(400).json('Acceso denied');
     const payload = jsonwebtoken_1.default.verify(token, default_1.default.TOKEN_SECRET_KEY || 'tokenwhatever');
     req.userId = payload._id;
-    console.log(payload);
     next();
 };
 exports.TokenValidation = TokenValidation;

@@ -7,14 +7,16 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const config_1 = __importDefault(require("./db/config"));
 const default_1 = __importDefault(require("./config/default"));
-const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const routes_1 = require("./routes");
+const verifyToken_1 = require("./middleware/verifyToken");
 // connecting mongoDB
 (0, config_1.default)();
 const app = (0, express_1.default)();
 // middleware
 app.use(body_parser_1.default.json());
 //routes
-app.use('/api/auth', authRoutes_1.default);
+app.use('/api/auth', routes_1.appRoutes.authRoutes);
+app.use('/api', verifyToken_1.TokenValidation, routes_1.appRoutes.routes);
 // server
 const PORT = default_1.default.PORT || 3000;
 app.listen(PORT, () => {

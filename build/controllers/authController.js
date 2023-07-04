@@ -12,19 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.profile = exports.signin = exports.signup = void 0;
-const user_1 = __importDefault(require("../models/user"));
+exports.signin = exports.signup = void 0;
+const userModel_1 = __importDefault(require("../models/userModel"));
 const default_1 = __importDefault(require("../config/default"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // saving user //
-    const user = new user_1.default({
+    const user = new userModel_1.default({
         email: req.body.email,
         password: req.body.password
     });
-    const userCheckifExist = yield user_1.default.findOne({ email: req.body.email });
+    const userCheckifExist = yield userModel_1.default.findOne({ email: req.body.email });
     if (userCheckifExist)
-        return res.status(400).json(`Already exists the user ${userCheckifExist.email}`);
+        return res.status(400).json(`The user ${userCheckifExist.email} already exists`);
     user.password = yield user.encryptPassword(user.password);
     const savedUser = yield user.save();
     // token
@@ -34,7 +34,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.signup = signup;
 const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // check User
-    const user = yield user_1.default.findOne({ email: req.body.email });
+    const user = yield userModel_1.default.findOne({ email: req.body.email });
     if (!user)
         return res.status(400).json('Email is wrong');
     //check Password
@@ -48,11 +48,9 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.header('auth-token', token).json(user);
 });
 exports.signin = signin;
-const profile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_1.default.findById(req.userId, { password: 0 });
-    if (!user)
-        return res.status(404).json("no User found");
-    res.json(user);
-});
-exports.profile = profile;
+// export const profile = async (req: Request, res: Response) =>{
+//     const user = await User.findById(req.userId, { password: 0 })
+//     if(!user) return res.status(404).json("no User found")
+//     res.json(user)
+// }
 //# sourceMappingURL=authController.js.map
