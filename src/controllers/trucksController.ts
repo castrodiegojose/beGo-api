@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
-import Truck, { ITruck } from "../models/trucksModel";
+import { getAllTrucksService } from "../services/trucksServices";
 
-export const getAllTrucks = async (req: Request, res: Response) =>{
-    const trucks = await Truck.find() as ITruck[];
+export const getAllTrucksController = async (req: Request, res: Response) =>{
+    const trucks = await getAllTrucksService();
     if(!trucks) return res.status(404).json("there are no trucks available");
     res.status(200).send({ status: "success", code: 200, data: trucks });
 }

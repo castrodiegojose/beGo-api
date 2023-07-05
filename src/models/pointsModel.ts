@@ -12,7 +12,7 @@ export interface IPoint extends Document{
 const pointsSchema = new Schema({
     location: {
         name: { type: String },
-        locationId: { type: String },
+        placeId: { type: String },
     }
 });
 
