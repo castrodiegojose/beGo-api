@@ -23,25 +23,38 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Status = exports.Type = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// import { ITruck } from "./trucksModel";
+// import { IRoute } from "./routesModel";
+var Type;
+(function (Type) {
+    Type["Standard"] = "Standard";
+    Type["Express"] = "Express";
+    Type["Custom"] = "Custom";
+})(Type = exports.Type || (exports.Type = {}));
+var Status;
+(function (Status) {
+    Status["Taken"] = "Taken";
+    Status["InProgress"] = "In_Progress";
+    Status["Completed"] = "Completed";
+    Status["Cancelled"] = "Cancelled";
+})(Status = exports.Status || (exports.Status = {}));
 ;
-const routeSchema = new mongoose_1.Schema({
-    pointA: { type: String },
-    pointB: { type: String },
-    coordenatesPointA: {
-        latitude: { type: Number },
-        longitude: { type: Number },
+const ordersSchema = new mongoose_1.Schema({
+    type: { type: String, enum: Object.values(Type) },
+    description: { type: String },
+    route: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "Route",
+        required: true
     },
-    coordenatesPointB: {
-        latitude: { type: Number },
-        longitude: { type: Number },
-    },
-    distance: { type: String },
-    truckAssigned: {
+    status: { type: String, enum: Object.values(Status) },
+    truck: {
         type: mongoose_1.default.Types.ObjectId,
         ref: "Truck",
         required: true,
-    },
+    }
 });
-exports.default = (0, mongoose_1.model)('Route', routeSchema);
-//# sourceMappingURL=routesModel.js.map
+exports.default = (0, mongoose_1.model)('Order', ordersSchema);
+//# sourceMappingURL=orderModel.js.map

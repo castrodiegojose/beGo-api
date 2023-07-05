@@ -13,9 +13,18 @@ exports.getAllTrucksController = void 0;
 const trucksServices_1 = require("../services/trucksServices");
 const getAllTrucksController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const trucks = yield (0, trucksServices_1.getAllTrucksService)();
-    if (!trucks)
-        return res.status(404).json("there are no trucks available");
-    res.status(200).send({ status: "success", code: 200, data: trucks });
+    if (!trucks) {
+        return res.status(404).send({
+            status: "error",
+            code: 404,
+            message: "There are no trucks available"
+        });
+    }
+    res.status(200).send({
+        status: "success",
+        code: 200,
+        data: trucks
+    });
 });
 exports.getAllTrucksController = getAllTrucksController;
 //# sourceMappingURL=trucksController.js.map

@@ -23,27 +23,50 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         password: req.body.password
     });
     const userCheckifExist = yield userModel_1.default.findOne({ email: req.body.email });
-    if (userCheckifExist)
-        return res.status(400).json(`The user ${userCheckifExist.email} already exists`);
+    if (userCheckifExist) {
+        return res.status(400).send({
+            status: "error",
+            code: 400,
+            message: `The user ${userCheckifExist.email} already exists`
+        });
+    }
     user.password = yield user.encryptPassword(user.password);
     const savedUser = yield user.save();
-    res.status(200).send({ status: "success", code: 200, data: savedUser });
+    res.status(200).send({
+        status: "success",
+        code: 200,
+        data: savedUser
+    });
 });
 exports.signup = signup;
 const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // check User
     const user = yield userModel_1.default.findOne({ email: req.body.email });
-    if (!user)
-        return res.status(400).json('Email is wrong');
+    if (!user) {
+        return res.status(400).send({
+            status: "error",
+            code: 400,
+            message: 'Email is wrong'
+        });
+    }
     //check Password
     const correctPass = yield user.validatePassword(req.body.password);
-    if (!correctPass)
-        return res.status(400).json('Password is wrong');
+    if (!correctPass) {
+        return res.status(400).send({
+            status: "error",
+            code: 400,
+            message: 'Password is wrong'
+        });
+    }
     //token
     const token = jsonwebtoken_1.default.sign({ _id: user._id }, default_1.default.TOKEN_SECRET_KEY || "tokenSecretKey", {
         expiresIn: 60 * 60 * 24
     });
-    res.header('auth-token', token).send({ status: "success", code: 200, data: user });
+    res.header('auth-token', token).send({
+        status: "success",
+        code: 200,
+        data: user
+    });
 });
 exports.signin = signin;
 //# sourceMappingURL=authController.js.map

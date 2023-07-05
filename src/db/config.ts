@@ -5,7 +5,10 @@ const MONGO_URI = `mongodb://${config.MONGODB_URI}`;
 
 const connectDB = async(): Promise<void> => {
     try {
-        await mongoose.connect(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true} as ConnectOptions);
+        await mongoose.connect(MONGO_URI, {
+            useNewUrlParser: true, 
+            useUnifiedTopology: true
+        } as ConnectOptions);
         console.log("MongoDB Connected");
 
     }catch (e) {
