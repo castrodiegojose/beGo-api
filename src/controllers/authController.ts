@@ -13,9 +13,8 @@ export const signup = async (req: Request, res: Response) =>{
     if(userCheckifExist) return res.status(400).json(`The user ${userCheckifExist.email} already exists`);
     user.password = await user.encryptPassword(user.password)
     const savedUser = await user.save();
-    // token
-    // const token:string = jwt.sign({_id: savedUser._id}, config.TOKEN_SECRET_KEY || "tokenSecretKey")
-    res.status(200).json(savedUser)
+    
+    res.status(200).send({ status: "success", code: 200, data: savedUser });
 }
 
 export const signin = async (req: Request, res: Response) =>{
@@ -31,11 +30,5 @@ export const signin = async (req: Request, res: Response) =>{
     const token:string = jwt.sign({_id: user._id}, config.TOKEN_SECRET_KEY || "tokenSecretKey", {
         expiresIn: 60 * 60 * 24
     })
-    res.header('auth-token', token).json(user);
+    res.header('auth-token', token).send({ status: "success", code: 200, data: user });
 }
-
-// export const profile = async (req: Request, res: Response) =>{
-//     const user = await User.findById(req.userId, { password: 0 })
-//     if(!user) return res.status(404).json("no User found")
-//     res.json(user)
-// }

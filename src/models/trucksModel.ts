@@ -1,6 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 
-export interface ITruck {
+export interface ITruck extends Document {
     model: string;
     make: string;
     year: number;

@@ -27,9 +27,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json(`The user ${userCheckifExist.email} already exists`);
     user.password = yield user.encryptPassword(user.password);
     const savedUser = yield user.save();
-    // token
-    // const token:string = jwt.sign({_id: savedUser._id}, config.TOKEN_SECRET_KEY || "tokenSecretKey")
-    res.status(200).json(savedUser);
+    res.status(200).send({ status: "success", code: 200, data: savedUser });
 });
 exports.signup = signup;
 const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,12 +43,7 @@ const signin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = jsonwebtoken_1.default.sign({ _id: user._id }, default_1.default.TOKEN_SECRET_KEY || "tokenSecretKey", {
         expiresIn: 60 * 60 * 24
     });
-    res.header('auth-token', token).json(user);
+    res.header('auth-token', token).send({ status: "success", code: 200, data: user });
 });
 exports.signin = signin;
-// export const profile = async (req: Request, res: Response) =>{
-//     const user = await User.findById(req.userId, { password: 0 })
-//     if(!user) return res.status(404).json("no User found")
-//     res.json(user)
-// }
 //# sourceMappingURL=authController.js.map

@@ -8,17 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllTrucks = void 0;
-const trucksModel_1 = __importDefault(require("../models/trucksModel"));
-const getAllTrucks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const trucks = yield trucksModel_1.default.find();
+exports.getAllTrucksController = void 0;
+const trucksServices_1 = require("../services/trucksServices");
+const getAllTrucksController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const trucks = yield (0, trucksServices_1.getAllTrucksService)();
     if (!trucks)
         return res.status(404).json("there are no trucks available");
     res.status(200).send({ status: "success", code: 200, data: trucks });
 });
-exports.getAllTrucks = getAllTrucks;
+exports.getAllTrucksController = getAllTrucksController;
 //# sourceMappingURL=trucksController.js.map
