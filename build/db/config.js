@@ -17,7 +17,10 @@ const default_1 = __importDefault(require("../config/default"));
 const MONGO_URI = `mongodb://${default_1.default.MONGODB_URI}`;
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        yield mongoose_1.default.connect(MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
         console.log("MongoDB Connected");
     }
     catch (e) {

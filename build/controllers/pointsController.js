@@ -13,9 +13,18 @@ exports.getAllPointsController = void 0;
 const pointsServices_1 = require("../services/pointsServices");
 const getAllPointsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const points = yield (0, pointsServices_1.getAllPointsService)();
-    if (!points)
-        return res.status(404).json("There are no points founded");
-    res.status(200).send({ status: "success", code: 200, data: points });
+    if (!points) {
+        return res.status(404).send({
+            status: "error",
+            code: 404,
+            message: "There are no points founded"
+        });
+    }
+    res.status(200).send({
+        status: "success",
+        code: 200,
+        data: points
+    });
 });
 exports.getAllPointsController = getAllPointsController;
 //# sourceMappingURL=pointsController.js.map

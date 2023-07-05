@@ -24,7 +24,6 @@ exports.getAllPointsService = getAllPointsService;
 function getPlaceIdByNamePointsService(namePoint) {
     return __awaiter(this, void 0, void 0, function* () {
         const point = yield pointsModel_1.default.findOne({ "location.name": namePoint });
-        console.log(point.location);
         const placeId = point ? point.location.placeId : undefined;
         return placeId;
     });

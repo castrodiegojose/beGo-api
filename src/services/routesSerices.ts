@@ -3,42 +3,40 @@ import Route, { IRoute } from "../models/routesModel";
 import { getCoordinatesForPlaceId, calculateRouteDistance } from "../utils/googleApi";
 import { getPlaceIdByNamePointsService } from "./pointsServices";
 import { UpdateQuery } from "mongoose";
+import { getTruckAvailableService } from "./trucksServices";
 
 
-export async function createNewRouteService(pointA: IPoint, pointB:IPoint): Promise<IRoute | undefined>{
+export async function createNewRouteService(pointA: string, pointB: string): Promise<IRoute | string | undefined | object>{
     try{
-        const placeIdA = pointA.location.placeId;
-        const placeIdB = pointB.location.placeId;
+        const placeIdFrom = await getPlaceIdByNamePointsService(pointA);
+        const placeIdTo = await getPlaceIdByNamePointsService(pointB);
 
-        console.log(placeIdA + " " + placeIdB)
-
-        const coordenatesOrigin = await getCoordinatesForPlaceId(<string>placeIdA);
-        const coordenatesDestination = await getCoordinatesForPlaceId(<string>placeIdB);
-
-        console.log(coordenatesOrigin?.latitude + " " +coordenatesDestination?.latitude)
+        const coordenatesOrigin = await getCoordinatesForPlaceId(<string>placeIdFrom);
+        const coordenatesDestination = await getCoordinatesForPlaceId(<string>placeIdTo);
 
         const origin = `${coordenatesOrigin?.latitude},${coordenatesOrigin?.longitude}`;
         const destination = `${coordenatesDestination?.latitude},${coordenatesDestination?.longitude}`;
 
         const distance = await calculateRouteDistance(origin, destination);
 
+        const truckId = await getTruckAvailableService();
+
+        if(!truckId) throw new Error("No truck available");
+
         const newRouteCreated = await Route.create({
-            pointA: pointA.location.name,
-            pointB: pointB.location.name,
-            route: {
-                from: {
+            pointA,
+            pointB,
+            coordenatesPointA: {
                     latitude: coordenatesOrigin?.latitude,
                     longitude: coordenatesOrigin?.longitude
                 },
-                to: {
+            coordenatesPointB: {
                     latitude: coordenatesDestination?.latitude,
                     longitude: coordenatesDestination?.longitude
                 },
-                distance,
-            }
+            distance, 
+            truckAssigned: truckId           
         }) as IRoute;
-
-        console.log(newRouteCreated)
 
         await newRouteCreated.save();
 
@@ -50,12 +48,12 @@ export async function createNewRouteService(pointA: IPoint, pointB:IPoint): Prom
 }
 
 export async function checkIfRouteExist(pointA: IPoint, pointB: IPoint): Promise<boolean> {
-    const fromName = pointA.location.name;
-    const toName = pointB.location.name;
+    // const fromName = pointA;
+    // const toName = pointB;
 
     const route = await Route.find({
-        pointA: fromName,
-        pointB: toName,
+        pointA,
+        pointB,
     })
 
     if(route.length !== 0) return true;
@@ -95,17 +93,15 @@ export async function updateRouteService(id: string, pointA: string, pointB: str
         const updateQuery = {
             pointA,
             pointB,
-            route: {
-                from:{
+            coordenatesPointA: {
                     latitude:coordenatesOrigin?.latitude,
                     longitude:coordenatesOrigin?.longitude
                 },
-                to:{
+            coordenatesPointB: {
                     latitude: coordenatesDestination?.latitude,
                     longitude: coordenatesDestination?.longitude
                 },
-                distance,
-            }
+            distance,            
         } as UpdateQuery<IRoute>;
 
         const routeUpdated = await Route.findByIdAndUpdate({ _id: id }, updateQuery, { new: true }) as IRoute;
@@ -122,6 +118,23 @@ export async function deleteRouteService(id: string): Promise<boolean | undefine
         const deleteRoute = await Route.deleteOne({ _id: id } );
         if(!deleteRoute.acknowledged) return false
         return true
+    } catch (err) {
+        console.error(`Data base error: ${err}`);
+    }
+}
+
+export async function getRouteIdForOrder(pickup: string, dropoff: string): Promise<IRoute | undefined> {
+    try {
+
+        let assignRoute: IRoute;
+
+        assignRoute = await Route.findOne({
+            pointA: pickup,
+            pointB: dropoff
+        }) as unknown as IRoute
+
+        return assignRoute
+
     } catch (err) {
         console.error(`Data base error: ${err}`);
     }

@@ -1,38 +1,37 @@
-import { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model, Document } from "mongoose";
 
 export interface ICoordenates {
     latitude: number;
     longitude: number;
 }
 
-export interface IRouteDirections {
-    from: ICoordenates;
-    to: ICoordenates;
-    distance: string;
-
-}
-
 export interface IRoute extends Document {
     pointA: string;
     pointB: string;
-    route: IRouteDirections;
+    coordenatesPointA: ICoordenates;
+    coordenatesPointB: ICoordenates
+    distance: string;
+    truckAssigned: string;
 };
 
 
 const routeSchema = new Schema({
     pointA: { type: String },
     pointB: { type: String },
-    route: { 
-        from: { 
+    coordenatesPointA : { 
             latitude: { type: Number },
             longitude: { type: Number }, 
         },
-        to:{ 
+    coordenatesPointB : {
             latitude: { type: Number },
             longitude: { type: Number }, 
          },
-        distance: { type: String },
-    }
+    distance: { type: String }, 
+    truckAssigned: { 
+        type: mongoose.Types.ObjectId,
+        ref: "Truck",
+        required: true, 
+    },   
 });
 
 export default model<IRoute>('Route', routeSchema);
